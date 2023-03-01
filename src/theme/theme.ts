@@ -9,6 +9,9 @@ export const theme: ThemeConfig = {
     Typography: {
       sizeMarginHeadingVerticalEnd: 0,
       sizeMarginHeadingVerticalStart: 0,
+      colorSuccess: "#16A349",
+      colorWarning: "#FE8F09",
+      // colorDanger: "#FD2223",
     },
     Menu: {
       colorItemTextSelected: "#FFF",
