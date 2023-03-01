@@ -5,7 +5,10 @@ import { LayoutDashboardProps } from "./types";
 
 export function LayoutDashboard({ box1, box2, box3 }: LayoutDashboardProps) {
   return (
-    <Row gutter={24} style={{ padding: 24, height: "100%" }}>
+    <Row
+      gutter={24}
+      style={{ padding: "24px 12px", height: "100%", margin: 0 }}
+    >
       <Col span={16}>
         <Row gutter={[24, 24]} style={{ height: "100%" }}>
           <Col span={24}>
