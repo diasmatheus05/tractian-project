@@ -16,6 +16,7 @@ export function Sider({ options }: SiderProps) {
         const { Icon } = option;
         return (
           <Menu
+            key={option.label}
             mode="inline"
             style={menuStyle}
             defaultOpenKeys={[option.label]}

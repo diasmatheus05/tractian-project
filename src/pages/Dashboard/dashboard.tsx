@@ -32,7 +32,19 @@ export function Dashboard() {
       }}
       box3={{
         title: "Coletas Uptime",
-        content: <ColetasUptime />,
+        content: (
+          <ColetasUptime
+            chartSize={{
+              width: 336,
+              height: 592,
+            }}
+            data={[
+              { name: "Maquina 1", value: Date.UTC(1952, 5, 22) },
+              { name: "Maquina 2", value: Date.UTC(1951, 7, 22) },
+              { name: "Maquina 3", value: Date.UTC(1951, 5, 22) },
+            ]}
+          />
+        ),
       }}
     />
   );

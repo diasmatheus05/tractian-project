@@ -5,9 +5,10 @@ import { EstadoAtualProps } from "./types";
 export function EstadoAtual({ states }: EstadoAtualProps) {
   return (
     <Row gutter={24}>
-      {states.map((state) => {
+      {states.map((state, index) => {
         return (
           <Col
+            key={state + "-" + index}
             span={8}
             style={{
               display: "flex",
