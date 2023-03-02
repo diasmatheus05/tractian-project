@@ -1,10 +1,6 @@
-export type Option = {
-  label: string;
-  Icon: JSX.Element;
-  options: { label: string }[];
-  multiple?: boolean;
-};
+import { SiderOption } from "../../types";
 
 export interface SiderProps {
-  options: Option[];
+  options: SiderOption[];
+  onClick: (...path: string[]) => void;
 }

@@ -6,7 +6,7 @@ import { SiderProps } from "./types";
 
 const { Sider: AntDSider } = Layout;
 
-export function Sider({ options }: SiderProps) {
+export function Sider({ options, onClick }: SiderProps) {
   return (
     <AntDSider width={240} style={siderStyle}>
       <TractianLogo />
@@ -20,15 +20,16 @@ export function Sider({ options }: SiderProps) {
             mode="inline"
             style={menuStyle}
             defaultOpenKeys={[option.label]}
-            defaultSelectedKeys={[option.options[0].label]}
+            defaultSelectedKeys={[String(option.options[0].id)]}
             multiple={option.multiple}
+            onClick={(e) => onClick(...e.keyPath)}
             items={[
               {
                 key: option.label,
                 icon: Icon,
                 label: option.label,
                 children: option.options.map((child) => ({
-                  key: child.label,
+                  key: child.id,
                   label: child.label,
                 })),
               },

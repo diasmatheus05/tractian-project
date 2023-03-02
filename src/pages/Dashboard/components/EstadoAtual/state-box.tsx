@@ -1,6 +1,6 @@
 import { Typography } from "antd";
+import { StateBoxProps } from "../../../../types";
 import { stateBoxStyle } from "./styles";
-import { StateBoxProps } from "./types";
 
 const { Title } = Typography;
 
