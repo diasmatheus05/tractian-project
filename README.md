@@ -6,6 +6,8 @@
 
 </center>
 
+[Link para acessar o projeto](https://tractian-project-bay.vercel.app/)
+
 <br />
 
 ![Layout](./src/assets/readme/dashboard.gif)
