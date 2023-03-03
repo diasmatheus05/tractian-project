@@ -4,13 +4,15 @@ import {
   ConfigProvider,
   List as AntDList,
   Row,
+  Tag,
   Tooltip,
+  Tree,
   Typography,
 } from "antd";
 import { AssetCard, Breadcrumb, List, ListHeader } from "../";
 import { LayoutDetailsProps } from "./types";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 export function LayoutDetails({
   type,
@@ -19,6 +21,7 @@ export function LayoutDetails({
   lists,
   assetsList,
   asset,
+  workorders,
 }: LayoutDetailsProps) {
   return (
     <ConfigProvider
@@ -94,6 +97,49 @@ export function LayoutDetails({
             <AssetCard {...asset} />
           </div>
         )}
+
+        {workorders &&
+          workorders.map((order) => {
+            const defaultChecked = [];
+            order.checklist.every((check) => check.completed) &&
+              defaultChecked.push(order.id + "-0");
+            order.checklist.forEach(
+              (check, index) =>
+                check.completed && defaultChecked.push(index + "-1")
+            );
+            return (
+              <div
+                style={{ width: "50%", marginInline: "auto", marginTop: 24 }}
+              >
+                <Title level={4}>{order.title}</Title>
+                <Text>{order.description}</Text>
+                <br />
+                <Text>
+                  Prioridade: <Tag color="error">{order.priority}</Tag>
+                </Text>
+                <br />
+                <br />
+                <Tree
+                  checkable
+                  defaultExpandedKeys={[order.id + "-0"]}
+                  defaultCheckedKeys={defaultChecked}
+                  treeData={[
+                    {
+                      title: order.title,
+                      key: order.id + "-0",
+                      children: order.checklist.map((check, index) => {
+                        return {
+                          title: check.task,
+                          key: index + "-1",
+                          disabled: check.completed,
+                        };
+                      }),
+                    },
+                  ]}
+                />
+              </div>
+            );
+          })}
       </div>
     </ConfigProvider>
   );

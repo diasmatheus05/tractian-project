@@ -2,6 +2,7 @@ import { Asset } from "./entities/asset";
 import { Company } from "./entities/company";
 import { User } from "./entities/unit";
 import { Unit } from "./entities/user";
+import { WorkOrders } from "./entities/workorders";
 
 export type State = "Em Alerta" | "Em Operação" | "Em Parada";
 export type AssetState = "inOperation" | "inDowntime" | "inAlert";
@@ -33,6 +34,7 @@ export interface IContextData {
   units: Unit[];
   companies: Company[];
   assets: Asset[];
+  workorders: WorkOrders[];
 }
 
 export interface IContextDashboardData {
@@ -62,4 +64,5 @@ export interface IContextDetailsData {
   }[];
   assetsList: Asset[];
   asset?: Asset;
+  workorders?: WorkOrders[];
 }

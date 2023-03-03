@@ -1,4 +1,4 @@
-import { Asset } from "../../../../types";
+import { Asset, WorkOrders } from "../../../../types";
 import { BreadcrumbProps } from "../Breadcrumb";
 
 export interface LayoutDetailsProps {
@@ -8,4 +8,5 @@ export interface LayoutDetailsProps {
   lists: { name: "unidades" | "colaboradores"; list: string[] }[];
   assetsList: Asset[];
   asset?: Asset;
+  workorders?: WorkOrders[];
 }

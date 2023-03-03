@@ -9,6 +9,7 @@ import { useLocation } from "react-router-dom";
 import { usePagination } from "../hooks";
 import { states } from "../provider";
 import { getAssets, getCompanies, getUnits, getUsers } from "../services";
+import { getWorkOrders } from "../services/workorders";
 import {
   Asset,
   IContextDashboardData,
@@ -59,12 +60,14 @@ export function DataContextProvider({ children }: DataContextProviderProps) {
         const units = await getUnits();
         const companies = await getCompanies();
         const assets = await getAssets();
+        const workorders = await getWorkOrders();
 
         data.current = {
           users,
           units,
           companies,
           assets,
+          workorders,
         };
 
         setFilter({
@@ -204,12 +207,19 @@ export function DataContextProvider({ children }: DataContextProviderProps) {
       unit = selectedItem as Unit;
     }
     var user = undefined;
+    var workorders = undefined;
     if (groupId === 2) {
       user = selectedItem as User;
+      workorders = data.current.workorders.filter((item) =>
+        item.assignedUserIds.includes(itemId)
+      );
     }
     var asset = undefined;
     if (groupId === 3) {
       asset = selectedItem as Asset;
+      workorders = data.current.workorders.filter(
+        (item) => item.assetId === itemId
+      );
     }
 
     const lists: {
@@ -272,9 +282,10 @@ export function DataContextProvider({ children }: DataContextProviderProps) {
         user: user?.name,
         asset: asset?.name,
       },
-      lists: lists,
+      lists,
       assetsList: assetsList || [],
-      asset: asset,
+      asset,
+      workorders,
     };
   }
 

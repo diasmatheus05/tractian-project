@@ -3,7 +3,8 @@ import { LayoutDetails } from "./components";
 
 export function Details() {
   const { getDetailsData } = useDataContext();
-  const { type, name, breadcrumb, lists, assetsList, asset } = getDetailsData();
+  const { type, name, breadcrumb, lists, assetsList, asset, workorders } =
+    getDetailsData();
 
   return (
     <LayoutDetails
@@ -13,6 +14,7 @@ export function Details() {
       lists={lists}
       assetsList={assetsList}
       asset={asset}
+      workorders={workorders}
     />
   );
 }
