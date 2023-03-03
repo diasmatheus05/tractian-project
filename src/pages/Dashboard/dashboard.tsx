@@ -19,11 +19,13 @@ export function Dashboard() {
       }}
       box2={{
         title: "Healthscores",
+        id: "healthscore",
         content: (
           <Healthscore
             chartSize={{
-              width: 728,
-              height: 376,
+              width: document.getElementById("healthscore")?.clientWidth || 728,
+              height:
+                document.getElementById("healthscore")?.clientHeight || 376,
             }}
             data={healthscores}
           />
@@ -31,11 +33,12 @@ export function Dashboard() {
       }}
       box3={{
         title: "Coletas Uptime",
+        id: "uptime",
         content: (
           <ColetasUptime
             chartSize={{
-              width: 336,
-              height: 592,
+              width: document.getElementById("uptime")?.clientWidth || 336,
+              height: document.getElementById("uptime")?.clientHeight || 592,
             }}
             data={coletasUptime}
           />

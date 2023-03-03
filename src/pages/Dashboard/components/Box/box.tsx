@@ -5,7 +5,7 @@ import { BoxProps } from "./types";
 
 const { Title } = Typography;
 
-export function Box({ title, children }: BoxProps) {
+export function Box({ title, children, id }: BoxProps) {
   return (
     <ConfigProvider
       theme={{
@@ -18,7 +18,9 @@ export function Box({ title, children }: BoxProps) {
         <Title level={4} style={{ marginBottom: 16 }}>
           {title}
         </Title>
-        <div>{children}</div>
+        <div id={id} style={{ height: "100%" }}>
+          {children}
+        </div>
       </div>
     </ConfigProvider>
   );

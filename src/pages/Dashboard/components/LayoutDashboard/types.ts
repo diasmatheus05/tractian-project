@@ -1,6 +1,7 @@
 interface LayoutBoxProps {
   title: string;
   content: React.ReactNode;
+  id?: string;
 }
 
 export interface LayoutDashboardProps {
