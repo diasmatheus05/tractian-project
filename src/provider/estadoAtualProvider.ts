@@ -1,4 +1,4 @@
-import { AssetState, State, TextType } from "../types";
+import { State, TextType } from "../types";
 
 export const states = (
   numbers: number[]
@@ -25,9 +25,29 @@ export const states = (
 ];
 
 export const currentState: {
-  [T in AssetState]: { state: State; type: "warning" | "success" | "error" };
+  [T in
+    | "inAlert"
+    | "inDowntime"
+    | "inOperation"
+    | "unplannedStop"
+    | "plannedStop"]: {
+    state:
+      | "Em Alerta"
+      | "Em Parada"
+      | "Em Operação"
+      | "Parada Não Planejada"
+      | "Parada Planejada";
+    type: "warning" | "success" | "error";
+    color: string;
+  };
 } = {
-  inAlert: { state: "Em Alerta", type: "warning" },
-  inDowntime: { state: "Em Parada", type: "error" },
-  inOperation: { state: "Em Operação", type: "success" },
+  inAlert: { state: "Em Alerta", type: "warning", color: "#FE8F09" },
+  inDowntime: { state: "Em Parada", type: "error", color: "#FD2223" },
+  inOperation: { state: "Em Operação", type: "success", color: "#16A349" },
+  unplannedStop: {
+    state: "Parada Não Planejada",
+    type: "error",
+    color: "#FD2223",
+  },
+  plannedStop: { state: "Parada Planejada", type: "error", color: "#FD2223" },
 };

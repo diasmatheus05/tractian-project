@@ -10,6 +10,9 @@ import {
   Typography,
 } from "antd";
 import { AssetCard, Breadcrumb, List, ListHeader } from "../";
+import { Timeline } from "../../../../components/Timeline";
+import { currentState } from "../../../../provider";
+import { containerStyle, deleteIconStyle, timelineStyle } from "./styles";
 import { LayoutDetailsProps } from "./types";
 
 const { Title, Text } = Typography;
@@ -31,14 +34,7 @@ export function LayoutDetails({
         },
       }}
     >
-      <div
-        style={{
-          padding: 24,
-          maxHeight: "100%",
-          height: "100%",
-          overflow: "auto",
-        }}
-      >
+      <div style={containerStyle}>
         <Breadcrumb {...breadcrumb} />
 
         <Row style={{ justifyContent: "space-between" }}>
@@ -52,14 +48,7 @@ export function LayoutDetails({
               />
             </Tooltip>
             <Tooltip title="Deletar">
-              <DeleteOutlined
-                style={{
-                  fontSize: 32,
-                  cursor: "pointer",
-                  marginRight: 8,
-                  color: "#FD2223",
-                }}
-              />
+              <DeleteOutlined style={deleteIconStyle} />
             </Tooltip>
           </div>
         </Row>
@@ -93,9 +82,27 @@ export function LayoutDetails({
         )}
 
         {asset && (
-          <div style={{ width: "50%", marginInline: "auto" }}>
-            <AssetCard {...asset} />
-          </div>
+          <Row gutter={24} style={{ margin: 0 }}>
+            <Col span={12} style={{ paddingLeft: 0 }}>
+              <AssetCard {...asset} />
+            </Col>
+            <Col span={12} style={{ paddingRight: 0 }}>
+              <div id="asset-timeline" style={timelineStyle}>
+                <Timeline
+                  chartSize={{
+                    width: 500,
+                    height: 600,
+                  }}
+                  labelFormat='<span style="color:{point.color}">● </span><span style="font-weight: bold;" >{point.x:%d %b %Y}</span><br />{point.label}'
+                  data={asset.healthHistory.map((item) => ({
+                    name: currentState[item.status].state,
+                    value: new Date(item.timestamp).getTime(),
+                    color: currentState[item.status].color,
+                  }))}
+                />
+              </div>
+            </Col>
+          </Row>
         )}
 
         {workorders &&
