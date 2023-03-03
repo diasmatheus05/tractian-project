@@ -1,8 +1,16 @@
-import { Col, ConfigProvider, List, Row, Typography } from "antd";
-import { AssetCard, Breadcrumb } from "../";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import {
+  Col,
+  ConfigProvider,
+  List as AntDList,
+  Row,
+  Tooltip,
+  Typography,
+} from "antd";
+import { AssetCard, Breadcrumb, List, ListHeader } from "../";
 import { LayoutDetailsProps } from "./types";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 export function LayoutDetails({
   type,
@@ -30,93 +38,60 @@ export function LayoutDetails({
       >
         <Breadcrumb {...breadcrumb} />
 
-        <Title style={{ marginTop: 16, marginBottom: 24 }}>
-          <b>{type}:</b> {name}
-        </Title>
+        <Row style={{ justifyContent: "space-between" }}>
+          <Title style={{ marginTop: 16, marginBottom: 24 }}>
+            <b>{type}:</b> {name}
+          </Title>
+          <div>
+            <Tooltip title="Editar">
+              <EditOutlined
+                style={{ fontSize: 32, cursor: "pointer", marginRight: 16 }}
+              />
+            </Tooltip>
+            <Tooltip title="Deletar">
+              <DeleteOutlined
+                style={{
+                  fontSize: 32,
+                  cursor: "pointer",
+                  marginRight: 8,
+                  color: "#FD2223",
+                }}
+              />
+            </Tooltip>
+          </div>
+        </Row>
 
         {lists?.length > 0 && (
           <Row gutter={24} style={{ margin: 0 }}>
             <Col span={12} style={{ paddingLeft: 0 }}>
-              <List
-                header={
-                  <Title level={3}>
-                    {lists[0].list.length} {lists[0].name}
-                  </Title>
-                }
-                bordered
-                dataSource={lists[0].list}
-                renderItem={(item) => (
-                  <List.Item>
-                    <Text>{item}</Text>
-                  </List.Item>
-                )}
-              />
+              <List name={lists[0].name} list={lists[0].list} />
             </Col>
             {lists.length > 1 && (
               <Col span={12} style={{ paddingRight: 0 }}>
-                <List
-                  header={
-                    <Title level={3}>
-                      {lists[0].list.length} {lists[1].name}
-                    </Title>
-                  }
-                  bordered
-                  dataSource={lists[1].list}
-                  renderItem={(item) => (
-                    <List.Item>
-                      <Text>{item}</Text>
-                    </List.Item>
-                  )}
-                />
+                <List name={lists[1].name} list={lists[1].list} />
               </Col>
             )}
           </Row>
         )}
 
         {!asset && (
-          <List
-            header={<Title level={3}>{assetsList?.length} ativos</Title>}
+          <AntDList
+            header={<ListHeader quantity={assetsList?.length} name="ativos" />}
             style={{ marginTop: 24 }}
             grid={{ gutter: 16, column: 3 }}
             bordered
             dataSource={assetsList}
             renderItem={(item) => (
-              <List.Item>
-                <AssetCard
-                  name={item.name}
-                  imageUrl={item.image}
-                  healthscore={item.healthscore}
-                  maxTemp={item.specifications.maxTemp}
-                  power={item.specifications.power}
-                  rpm={item.specifications.rpm}
-                  model={item.model}
-                  sensors={item.sensors}
-                  status={item.status}
-                  lastUptime={item.metrics.lastUptimeAt}
-                  totalCollectsUptime={item.metrics.totalCollectsUptime}
-                  totalUptime={item.metrics.totalUptime}
-                />
-              </List.Item>
+              <AntDList.Item>
+                <AssetCard {...item} />
+              </AntDList.Item>
             )}
           />
         )}
 
         {asset && (
           <div style={{ width: "50%", marginInline: "auto" }}>
-            <AssetCard
-              name={asset.name}
-              imageUrl={asset.image}
-              healthscore={asset.healthscore}
-              maxTemp={asset.specifications.maxTemp}
-              power={asset.specifications.power}
-              rpm={asset.specifications.rpm}
-              model={asset.model}
-              sensors={asset.sensors}
-              status={asset.status}
-              lastUptime={asset.metrics.lastUptimeAt}
-              totalCollectsUptime={asset.metrics.totalCollectsUptime}
-              totalUptime={asset.metrics.totalUptime}
-            />
+            <AssetCard {...asset} />
           </div>
         )}
       </div>

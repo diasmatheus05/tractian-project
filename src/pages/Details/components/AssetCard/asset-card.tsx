@@ -1,26 +1,23 @@
 import { Card, Divider, Tag, Typography } from "antd";
 import { format } from "date-fns";
 import { currentState } from "../../../../provider";
-import { AssetCardProps } from "./types";
+import { Asset } from "../../../../types";
 
 const { Text, Title } = Typography;
 
 export function AssetCard({
   name,
-  imageUrl,
+  image,
+  status,
   model,
   sensors,
-  maxTemp,
-  power,
-  rpm,
   healthscore,
-  status,
-  lastUptime,
-  totalCollectsUptime,
-  totalUptime,
-}: AssetCardProps) {
+  metrics,
+  specifications,
+}: Asset) {
+  const { maxTemp, power, rpm } = specifications;
   return (
-    <Card cover={<img alt={name} src={imageUrl} />}>
+    <Card cover={<img alt={name} src={image} />}>
       <div
         style={{
           display: "flex",
@@ -81,16 +78,16 @@ export function AssetCard({
       <Text>
         <>
           <b>Última Coleta:</b>{" "}
-          {format(new Date(lastUptime), "dd/MM/yy HH:mm:ss")}
+          {format(new Date(metrics.lastUptimeAt), "dd/MM/yy HH:mm:ss")}
         </>
       </Text>
       <br />
       <Text>
-        <b>Número de Coletas:</b> {totalUptime}
+        <b>Número de Coletas:</b> {metrics.totalUptime}
       </Text>
       <br />
       <Text>
-        <b>Horas de Coletas:</b> {totalCollectsUptime} Hs
+        <b>Horas de Coletas:</b> {metrics.totalCollectsUptime} Hs
       </Text>
     </Card>
   );

@@ -11,7 +11,7 @@ export const theme: ThemeConfig = {
       sizeMarginHeadingVerticalStart: 0,
       colorSuccess: "#16A349",
       colorWarning: "#FE8F09",
-      // colorDanger: "#FD2223",
+      colorError: "#FD2223",
     },
     Menu: {
       colorItemTextSelected: "#FFF",
