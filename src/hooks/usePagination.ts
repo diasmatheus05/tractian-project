@@ -1,22 +1,18 @@
-export function usePagination() {
-  function getCurrentPage() {
-    return window.location.pathname;
-  }
-
+export function usePagination(pathname: string) {
   function togglePage() {
-    if (getCurrentPage() === "/") return "/details";
+    if (pathname === "/") return "/details";
 
     return "/";
   }
 
   function getPageName() {
-    if (getCurrentPage() === "/details") return "Detalhes";
+    if (pathname === "/details") return "Detalhes";
 
     return "Dashboard";
   }
 
   function getLinkText() {
-    if (getCurrentPage() === "/details") return "Dashboard";
+    if (pathname === "/details") return "Dashboard";
 
     return "Detalhes";
   }

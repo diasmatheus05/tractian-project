@@ -1,19 +1,13 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 import { Dashboard } from "../pages/Dashboard";
 import { Details } from "../pages/Details";
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Dashboard />,
-  },
-  {
-    path: "/details",
-    element: <Details />,
-  },
-]);
-
-export function Routes() {
-  return <RouterProvider router={router} />;
+export function MyRoutes() {
+  return (
+    <Routes>
+      <Route path="/" element={<Dashboard />} />
+      <Route path="/details" element={<Details />} />
+    </Routes>
+  );
 }

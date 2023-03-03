@@ -5,11 +5,11 @@ import {
   LayoutDashboard,
 } from "./components";
 
-import { useDataContext } from "../../contexts/dataContext";
+import { useDataContext } from "../../contexts";
 
 export function Dashboard() {
-  const { getData } = useDataContext();
-  const { states, coletasUptime, healthscores } = getData();
+  const { getDashboardData } = useDataContext();
+  const { states, coletasUptime, healthscores } = getDashboardData();
 
   return (
     <LayoutDashboard

@@ -1,19 +1,21 @@
-import { Button, Layout, Typography } from "antd";
-import { usePagination } from "../../hooks/usePagination";
+import { Layout, Typography } from "antd";
+import { Link, useLocation } from "react-router-dom";
+import { usePagination } from "../../hooks";
 import { headerStyle, textStyle } from "./styles";
 
 const { Header: AntDHeader } = Layout;
 const { Title } = Typography;
 
 export function Header() {
-  const { togglePage, getLinkText, getPageName } = usePagination();
+  const { pathname } = useLocation();
+  const { togglePage, getLinkText, getPageName } = usePagination(pathname);
 
   return (
     <AntDHeader style={headerStyle}>
       <Title level={3}>{getPageName()}</Title>
-      <Button type="link" href={togglePage()} style={textStyle}>
+      <Link to={togglePage()} style={textStyle}>
         Ver {getLinkText()}
-      </Button>
+      </Link>
     </AntDHeader>
   );
 }

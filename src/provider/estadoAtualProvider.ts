@@ -24,8 +24,10 @@ export const states = (
   },
 ];
 
-export const statesDict: { [T in AssetState]: State } = {
-  inAlert: "Em Alerta",
-  inDowntime: "Em Parada",
-  inOperation: "Em Operação",
+export const currentState: {
+  [T in AssetState]: { state: State; type: "warning" | "success" | "error" };
+} = {
+  inAlert: { state: "Em Alerta", type: "warning" },
+  inDowntime: { state: "Em Parada", type: "error" },
+  inOperation: { state: "Em Operação", type: "success" },
 };

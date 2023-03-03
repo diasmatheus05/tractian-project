@@ -42,9 +42,8 @@ export function Sider({ options, independentMenus, onClick }: SiderProps) {
         <Menu
           mode="inline"
           style={menuStyle}
-          // defaultOpenKeys={options.map((o) => o.label)}
-          defaultOpenKeys={["Empresas", "Unidades", "Colaboradores"]}
-          defaultSelectedKeys={["1-0"]}
+          defaultOpenKeys={[options[0]?.label]}
+          defaultSelectedKeys={[options[0]?.options[0].id + "-0"]}
           onClick={(e) => onClick(...e.keyPath)}
           items={options.map((option, index) => {
             const { Icon } = option;

@@ -7,4 +7,7 @@ export const siderStyle: React.CSSProperties = {
 export const menuStyle: React.CSSProperties = {
   borderRight: "none",
   background: "transparent",
+
+  overflow: "auto",
+  maxHeight: "89%",
 };

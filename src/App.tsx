@@ -1,17 +1,29 @@
 import { Layout } from "antd";
+import { useLocation } from "react-router-dom";
 
 import { Content } from "./components/Content";
 import { Header } from "./components/Header";
 import { Sider } from "./components/Sider";
-import { useDataContext } from "./contexts/dataContext";
-import { usePagination } from "./hooks/usePagination";
+import { useDataContext } from "./contexts";
+import { usePagination } from "./hooks";
+import { options } from "./provider";
 
-import { Routes } from "./router/routes";
+import { MyRoutes } from "./router/routes";
 
 export default function App() {
-  const { siderOptions, onClickSider } = useDataContext();
+  const { data, onClickSider } = useDataContext();
 
-  const { getPageName } = usePagination();
+  const { pathname } = useLocation();
+  const { getPageName } = usePagination(pathname);
+
+  const siderOptions = data
+    ? options(
+        data.companies,
+        data.units,
+        data.users,
+        getPageName() === "Detalhes" ? data.assets : undefined
+      )
+    : [];
 
   return (
     <div style={{ height: "100vh" }}>
@@ -24,7 +36,7 @@ export default function App() {
         <Layout>
           <Header />
           <Content>
-            <Routes />
+            <MyRoutes />
           </Content>
         </Layout>
       </Layout>

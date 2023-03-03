@@ -5,18 +5,18 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { states } from "../provider/estadoAtualProvider";
-import { options } from "../provider/siderProvider";
-import { getAssets } from "../services/assets";
-import { getCompanies } from "../services/companies";
-import { getUnits } from "../services/units";
-import { getUsers } from "../services/users";
+import { useLocation } from "react-router-dom";
+import { usePagination } from "../hooks";
+import { states } from "../provider";
+import { getAssets, getCompanies, getUnits, getUsers } from "../services";
 import {
   Asset,
   IContextDashboardData,
   IContextData,
+  IContextDetailsData,
   SiderLabelOptions,
-  SiderOption,
+  Unit,
+  User,
 } from "../types";
 
 interface DataContextProviderProps {
@@ -24,15 +24,15 @@ interface DataContextProviderProps {
 }
 
 interface DataContextProps {
-  siderOptions: SiderOption[];
-  getData: () => IContextDashboardData;
+  data: IContextData | null;
+  getDashboardData: () => IContextDashboardData;
   onClickSider: (option: string, group: string) => void;
+  getDetailsData: () => IContextDetailsData;
 }
 
 const DataContext = createContext({} as DataContextProps);
 
 export function DataContextProvider({ children }: DataContextProviderProps) {
-  const [siderOptions, setSiderOptions] = useState<SiderOption[]>([]);
   const [filter, setFilter] = useState<{
     companies: string[];
     units: string[];
@@ -43,7 +43,12 @@ export function DataContextProvider({ children }: DataContextProviderProps) {
     users: [],
   });
 
+  const [detailSelected, setDetailSelected] = useState<number[]>([]);
+
   const data = useRef<IContextData | null>(null);
+
+  const { pathname } = useLocation();
+  const { getPageName } = usePagination(pathname);
 
   useEffect(() => {
     fetch();
@@ -62,19 +67,19 @@ export function DataContextProvider({ children }: DataContextProviderProps) {
           assets,
         };
 
-        setSiderOptions(options(companies, units, users));
         setFilter({
           companies: [String(companies[0].id)],
           units: [String(units[0].id)],
           users: [String(users[0].id)],
         });
+        setDetailSelected([companies[0].id, 0]);
       } catch (e) {
         console.log("Error fetching data");
       }
     }
   }, []);
 
-  function getData(): IContextDashboardData {
+  function getDashboardData(): IContextDashboardData {
     if (!data.current)
       return {
         states: [],
@@ -118,24 +123,28 @@ export function DataContextProvider({ children }: DataContextProviderProps) {
   }
 
   function onClickSider(option: string, group: string) {
-    const groupDict: {
-      [T in SiderLabelOptions]: "companies" | "units" | "users";
-    } = {
-      Empresas: "companies",
-      Unidades: "units",
-      Colaboradores: "users",
-    };
-
-    const groupKey = groupDict[group as SiderLabelOptions];
-
-    setFilter((oldFilter) => {
-      return {
-        ...oldFilter,
-        [groupKey]: oldFilter[groupKey].includes(option)
-          ? oldFilter[groupKey].filter((i) => i !== option)
-          : [...oldFilter[groupKey], option],
+    if (getPageName() === "Dashboard") {
+      const groupDict: {
+        [T in SiderLabelOptions]: "companies" | "units" | "users";
+      } = {
+        Empresas: "companies",
+        Unidades: "units",
+        Colaboradores: "users",
       };
-    });
+
+      const groupKey = groupDict[group as SiderLabelOptions];
+
+      setFilter((oldFilter) => {
+        return {
+          ...oldFilter,
+          [groupKey]: oldFilter[groupKey].includes(option)
+            ? oldFilter[groupKey].filter((i) => i !== option)
+            : [...oldFilter[groupKey], option],
+        };
+      });
+    } else {
+      setDetailSelected(option.split("-").map((n) => Number(n)));
+    }
   }
 
   function filterAsset({ assignedUserIds, companyId, unitId }: Asset) {
@@ -151,12 +160,131 @@ export function DataContextProvider({ children }: DataContextProviderProps) {
     return false;
   }
 
+  function getCompanyById(id: number) {
+    return data.current?.companies.find((item) => item.id === id);
+  }
+
+  function getUnitById(id: number) {
+    return data.current?.units.find((item) => item.id === id);
+  }
+
+  // Refatorar função
+  function getDetailsData() {
+    if (!data.current) return {} as IContextDetailsData;
+
+    const detailsIdDict: {
+      [T in number]: {
+        text: "Empresa" | "Unidade" | "Colaborador" | "Ativo";
+        value: "companies" | "units" | "users" | "assets";
+      };
+    } = {
+      0: { text: "Empresa", value: "companies" },
+      1: { text: "Unidade", value: "units" },
+      2: { text: "Colaborador", value: "users" },
+      3: { text: "Ativo", value: "assets" },
+    };
+
+    const [itemId, groupId] = detailSelected;
+    const detail = detailsIdDict[groupId];
+
+    const selectedItem = data.current[detail.value].find(
+      (item) => item.id === itemId
+    )!;
+
+    var company = undefined;
+    if (groupId > 0) {
+      company = getCompanyById((selectedItem as Unit | User | Asset).companyId);
+    } else if (groupId === 0) {
+      company = selectedItem;
+    }
+    var unit = undefined;
+    if (groupId > 1) {
+      unit = getUnitById((selectedItem as User | Asset).unitId);
+    } else if (groupId === 1) {
+      unit = selectedItem as Unit;
+    }
+    var user = undefined;
+    if (groupId === 2) {
+      user = selectedItem as User;
+    }
+    var asset = undefined;
+    if (groupId === 3) {
+      asset = selectedItem as Asset;
+    }
+
+    const lists: {
+      name: "unidades" | "colaboradores";
+      list: string[];
+    }[] = [];
+    if (groupId === 0) {
+      lists.push({
+        name: "unidades",
+        list: data.current.units.reduce<string[]>(
+          (accumulator, current) =>
+            current.companyId === itemId
+              ? accumulator.concat(current.name)
+              : accumulator,
+          []
+        ),
+      });
+      lists.push({
+        name: "colaboradores",
+        list: data.current.users.reduce<string[]>(
+          (accumulator, current) =>
+            current.companyId === itemId
+              ? accumulator.concat(current.name)
+              : accumulator,
+          []
+        ),
+      });
+    } else if (groupId === 1) {
+      lists.push({
+        name: "colaboradores",
+        list: data.current.users.reduce<string[]>(
+          (accumulator, current) =>
+            current.unitId === itemId
+              ? accumulator.concat(current.name)
+              : accumulator,
+          []
+        ),
+      });
+    }
+
+    var assetsList = undefined;
+    if (groupId !== 3) {
+      assetsList = data.current.assets.reduce<Asset[]>(
+        (accumulator, current) =>
+          (groupId === 0 && current.companyId === itemId) ||
+          (groupId === 1 && current.unitId === itemId) ||
+          (groupId === 2 && current.assignedUserIds.includes(itemId))
+            ? accumulator.concat(current)
+            : accumulator,
+        []
+      );
+    }
+
+    return {
+      type: detail.text,
+      name: selectedItem.name,
+      breadcrumb: {
+        company: company?.name,
+        unit: unit?.name,
+        user: user?.name,
+        asset: asset?.name,
+      },
+      lists: lists,
+      assetsList: assetsList || [],
+      asset: asset,
+    };
+  }
+
   return (
     <DataContext.Provider
       value={{
-        siderOptions,
-        getData,
+        data: data.current,
+        getDashboardData,
         onClickSider,
+        getDetailsData,
       }}
     >
       {children}
